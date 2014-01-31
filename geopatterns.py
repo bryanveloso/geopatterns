@@ -176,6 +176,50 @@ class GeoPattern(object):
 
                 i += 1
 
+    def geo_sinewaves(self):
+        period = math.floor(promap(int(self.hash[1:][:1], 16), 0, 15, 100, 400))
+        amplitude = math.floor(promap(int(self.hash[2:][:1], 16), 0, 15, 30, 100))
+        wave_width = math.floor(promap(int(self.hash[3:][:1], 16), 0, 15, 3, 30))
+
+        self.svg.width = period
+        self.svg.height = wave_width * 36
+
+        for i in range(35):
+            val = int(self.hash[i:][1], 16)
+            fill = '#ddd' if val % 2 == 0 else '#222'
+            opacity = promap(val, 0, 15, 0.02, 0.15)
+            x_offset = period / 4 * 0.7
+
+            str = 'M0 {} C {} 0, {} 0, {} {} S {} {}, {} {} S {} 0, {}, {}'.format(
+                amplitude, x_offset, (period / 2 - x_offset), (period / 2),
+                amplitude, (period - x_offset), (amplitude * 2), period,
+                amplitude, (period * 1.5 - x_offset), (period * 1.5), amplitude
+            )
+
+            self.svg.path(str, **{
+                'fill': 'none',
+                'stroke': fill,
+                'transform': 'translate({}, {})'.format(
+                    (period / 4), (wave_width * i - amplitude * 1.5)
+                ),
+                'style': {
+                    'opacity': opacity,
+                    'stroke_width': '{}px'.format(wave_width)
+                }
+            })
+
+            self.svg.path(str, **{
+                'fill': 'none',
+                'stroke': fill,
+                'transform': 'translate({}, {})'.format(
+                    (period / 4), (wave_width * i - amplitude * 1.5 + wave_width * 36)
+                ),
+                'style': {
+                    'opacity': opacity,
+                    'stroke_width': '{}px'.format(wave_width)
+                }
+            })
+
     def build_hexagon_shape(self, side_length):
         c = side_length
         a = c / 2
