@@ -59,7 +59,7 @@ class SVG(object):
                 str += '{}="'.format(key)
                 for key, value in value.iteritems():
                     str += '{}:{};'.format(key, value)
-                str += '"'
+                str += '" '
             else:
                 str += '{}="{}" '.format(key, value)
         return str
@@ -108,7 +108,7 @@ class GeoPattern(object):
             'fill': 'rgb({}, {}, {})'.format(r, g, b)
         })
 
-    def geoHexagons(self):
+    def geo_hexagons(self):
         scale = int(self.hash[1:][:1], 16)
         side_length = promap(scale, 0, 15, 5, 120)
         hex_height = side_length * math.sqrt(3)
