@@ -405,7 +405,7 @@ class GeoPattern(object):
                 self.svg.circle(
                     x * ring_size + x * stroke_width + (ring_size + stroke_width) / 2,
                     y * ring_size + y * stroke_width + (ring_size + stroke_width) / 2,
-                    ring_size / 2, {
+                    ring_size / 2, **{
                         'fill': none,
                         'stroke': '#000',
                         'style': {
