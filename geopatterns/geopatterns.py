@@ -31,9 +31,11 @@ class GeoPattern(object):
         self.generate_background()
         getattr(self, 'geo_%s' % generator)()
 
+    @property
     def svg_string(self):
         return self.svg.to_string()
 
+    @property
     def base64_string(self):
         return base64.encode(self.svg.to_string())
 
