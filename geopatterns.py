@@ -48,8 +48,9 @@ class SVG(object):
         })
 
     def group(self, elements, **kwargs):
-        self.svg_string += '<g {kwargs}>'.format({'kwargs': self.write_args(**kwargs)})
-        (eval(element) for element in elements)
+        self.svg_string += '<g {}>'.format(self.write_args(**kwargs))
+        for element in elements:
+            exec(element)
         self.svg_string += '</g>'
 
     def write_args(self, **kwargs):
