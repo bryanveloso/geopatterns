@@ -51,3 +51,11 @@ Get the Base64-encoded string:
 >>> print(pattern.base64_string)
 'PHN2ZyB4bWxucz0iaHR0cDov...
 ```
+
+In the case of the Base64-encoded string, you can use it in CSS as follows:
+
+```css
+body {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz...zdmc+');
+}
+```
