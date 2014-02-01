@@ -37,7 +37,7 @@ class GeoPattern(object):
 
     @property
     def base64_string(self):
-        return base64.b64encode(self.svg.to_string())
+        return base64.encodestring(self.svg.to_string()).replace('\n', '')
 
     def generate_background(self):
         hue_offset = promap(int(self.hash[14:][:3], 16), 0, 4095, 0, 359)
