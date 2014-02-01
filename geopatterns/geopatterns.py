@@ -7,73 +7,8 @@ import math
 
 from colour import Color
 
-
-class SVG(object):
-    def __init__(self):
-        self.width = 100
-        self.height = 100
-        self.svg_string = ''
-
-    @property
-    def svg_header(self):
-        return '<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">'.format(**{
-            'width': self.width, 'height': self.height
-        })
-
-    @property
-    def svg_closer(self):
-        return '</svg>'
-
-    def to_string(self):
-        return ''.join([self.svg_header, self.svg_string, self.svg_closer])
-
-    def rect(self, x, y, width, height, **kwargs):
-        self.svg_string += '<rect x="{x}" y="{y}" width="{width}" height="{height}" {kwargs}/>'.format(**{
-            'x': x, 'y': y, 'width': width, 'height': height, 'kwargs': self.write_args(**kwargs)
-        })
-
-    def circle(self, cx, cy, r, **kwargs):
-        self.svg_string += '<circle cx="{cx}" cy="{cy}" r="{r}" {kwargs}/>'.format(**{
-            'cx': cx, 'cy': cy, 'r': r, 'kwargs': self.write_args(**kwargs)
-        })
-
-    def path(self, str, **kwargs):
-        self.svg_string += '<path d="{str}" {kwargs}/>'.format(**{
-            'str': str, 'kwargs': self.write_args(**kwargs)
-        })
-
-    def polyline(self, str, **kwargs):
-        self.svg_string += '<polyline points="{str}" {kwargs}/>'.format(**{
-            'str': str, 'kwargs': self.write_args(**kwargs)
-        })
-
-    def group(self, elements, **kwargs):
-        self.svg_string += '<g {}>'.format(self.write_args(**kwargs))
-        for element in elements:
-            exec(element)
-        self.svg_string += '</g>'
-
-    def write_args(self, **kwargs):
-        str = ''
-        for key, value in kwargs.iteritems():
-            if isinstance(value, dict):
-                str += '{}="'.format(key)
-                for key, value in value.iteritems():
-                    str += '{}:{};'.format(key, value)
-                str += '" '
-            else:
-                str += '{}="{}" '.format(key, value)
-        return str
-
-
-# Python implementation of Processing's map function
-# http://processing.org/reference/map_.html
-def promap(value, v_min, v_max, d_min, d_max):  # v for value, d for desired
-    v_value = float(value)
-    v_range = v_max - v_min
-    d_range = d_max - d_min
-    d_value = (v_value - v_min) * d_range / v_range + d_min
-    return d_value
+from .svg import SVG
+from .utils import promap
 
 
 class GeoPattern(object):
@@ -91,7 +26,7 @@ class GeoPattern(object):
         ]
         if generator not in available_generators:
             raise ValueError('{} is not a valid generator. Valid choices are {}.'.format(
-                generator, ', '.join(['"{}"'.format(generator) for generator in available_generators])
+                generator, ', '.join(['"{}"'.format(g) for g in available_generators])
             ))
         self.generate_background()
         getattr(self, 'geo_%s' % generator)()
@@ -406,7 +341,7 @@ class GeoPattern(object):
                     x * ring_size + x * stroke_width + (ring_size + stroke_width) / 2,
                     y * ring_size + y * stroke_width + (ring_size + stroke_width) / 2,
                     ring_size / 2, **{
-                        'fill': none,
+                        'fill': 'none',
                         'stroke': '#000',
                         'style': {
                             'opacity': opacity,
