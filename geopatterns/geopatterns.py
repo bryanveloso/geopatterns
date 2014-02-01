@@ -51,9 +51,9 @@ class GeoPattern(object):
             base_color.saturation = base_color.saturation - sat_offset / 100
 
         rgb = base_color.rgb
-        r = round(rgb[0] * 255)
-        g = round(rgb[1] * 255)
-        b = round(rgb[2] * 255)
+        r = int(round(rgb[0] * 255))
+        g = int(round(rgb[1] * 255))
+        b = int(round(rgb[2] * 255))
         return self.svg.rect(0, 0, '100%', '100%', **{
             'fill': 'rgb({}, {}, {})'.format(r, g, b)
         })
