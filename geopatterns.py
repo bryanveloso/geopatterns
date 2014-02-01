@@ -77,12 +77,17 @@ def promap(value, v_min, v_max, d_min, d_max):  # v for value, d for desired
 
 
 class GeoPattern(object):
-    def __init__(self, string):
+    def __init__(self, string, generator=None):
         self.hash = hashlib.sha1(string).hexdigest()
         self.svg = SVG()
 
+        available_generators = ['hexagons', 'sinewaves', 'xes', 'overlappingcircles']
+        if generator not in available_generators:
+            raise ValueError('{} is not a valid generator. Valid choices are {}.'.format(
+                generator, ', '.join(['"{}"'.format(generator) for generator in available_generators])
+            ))
         self.generate_background()
-        self.geoHexagons()
+        getattr(self, 'geo_%s' % generator)()
 
     def svg_string(self):
         return self.svg.to_string()
