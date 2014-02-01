@@ -1,7 +1,7 @@
 GeoPatterns
 ===========
 
-![](https://f.cloud.github.com/assets/1258/2056684/3dc871ee-8ae8-11e3-9864-7285d6bef584.png)
+![](https://f.cloud.github.com/assets/1258/2056725/ede0785e-8aea-11e3-9e1e-45931b6e1c83.png)
 
 Generate beautiful SVG patterns from a string. This is a Python-port of
 [Jason Long][1]'s [Ruby library][2].
