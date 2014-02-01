@@ -29,12 +29,12 @@ generator.
 
 Currently available generators are:
 
-    * 'hexagons'
-    * 'overlappingcircles'
-    * 'rings'
-    * 'sinewaves'
-    * 'squares'
-    * 'xes'
+* `hexagons`
+* `overlappingcircles`
+* `rings`
+* `sinewaves`
+* `squares`
+* `xes`
 
 Get the SVG string:
 
