@@ -84,6 +84,7 @@ class GeoPattern(object):
         available_generators = [
             'hexagons',
             'overlappingcircles',
+            'rings',
             'sinewaves',
             'squares',
             'xes'
@@ -384,6 +385,35 @@ class GeoPattern(object):
                         'opacity': opacity
                     }
                 })
+
+                i += 1
+
+    def geo_rings(self):
+        scale = int(self.hash[1:][:1], 16)
+        ring_size = promap(scale, 0, 15, 5, 80)
+        stroke_width = ring_size / 4
+
+        self.svg.width = (ring_size + stroke_width) * 6
+        self.svg.height = (ring_size + stroke_width) * 6
+
+        i = 0
+        for y in range(5):
+            for x in range(5):
+                val = int(self.hash[i:][:1], 16)
+                opacity = promap(val, 0, 15, 0.02, 0.16)
+
+                self.svg.circle(
+                    x * ring_size + x * stroke_width + (ring_size + stroke_width) / 2,
+                    y * ring_size + y * stroke_width + (ring_size + stroke_width) / 2,
+                    ring_size / 2, {
+                        'fill': none,
+                        'stroke': '#000',
+                        'style': {
+                            'opacity': opacity,
+                            'stroke-width': '{}px'.format(stroke_width)
+                        }
+                    }
+                )
 
                 i += 1
 
