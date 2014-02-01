@@ -81,7 +81,13 @@ class GeoPattern(object):
         self.hash = hashlib.sha1(string).hexdigest()
         self.svg = SVG()
 
-        available_generators = ['hexagons', 'sinewaves', 'xes', 'overlappingcircles']
+        available_generators = [
+            'hexagons',
+            'overlappingcircles',
+            'sinewaves',
+            'squares',
+            'xes'
+        ]
         if generator not in available_generators:
             raise ValueError('{} is not a valid generator. Valid choices are {}.'.format(
                 generator, ', '.join(['"{}"'.format(generator) for generator in available_generators])
@@ -356,6 +362,28 @@ class GeoPattern(object):
                             'opacity': opacity
                         }
                     })
+
+                i += 1
+
+    def geo_squares(self):
+        square_size = promap(int(self.hash[0:][:1], 16), 0, 15, 10, 70)
+
+        self.svg.width = square_size * 6
+        self.svg.height = square_size * 6
+
+        i = 0
+        for y in range(5):
+            for x in range(5):
+                val = int(self.hash[i:][:1], 16)
+                opacity = promap(val, 0, 15, 0.02, 0.2)
+                fill = '#ddd' if val % 2 == 0 else '#222'
+
+                self.svg.rect(x * square_size, y * square_size, square_size, square_size, **{
+                    'fill': fill,
+                    'style': {
+                        'opacity': opacity
+                    }
+                })
 
                 i += 1
 
