@@ -18,8 +18,8 @@ class GeoPattern(object):
 
         available_generators = [
             'hexagons',
-            'plus_signs',
             'overlapping_circles',
+            'plus_signs',
             'rings',
             'sinewaves',
             'squares',
