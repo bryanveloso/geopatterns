@@ -23,6 +23,7 @@ class GeoPattern(object):
             'rings',
             'sinewaves',
             'squares',
+            'triangles',
             'xes'
         ]
         if generator not in available_generators:
@@ -355,7 +356,7 @@ class GeoPattern(object):
                     })
 
                 # Add an extra one at top-right and bottom-right, for tiling.
-                if x == 0 && y == 0:
+                if x == 0 and y == 0:
                     self.svg.group(plus_shape, {
                         'fill': fill,
                         'transform': 'translate({}, {})'.format(
@@ -419,6 +420,54 @@ class GeoPattern(object):
 
                 i += 1
 
+    def geo_triangles(self):
+        scale = int(self.hash[1:][:1], 16)
+        side_length = promap(scale, 0, 15, 5, 120)
+        triangle_height = side_length / 2 * math.sqrt(3)
+        triangle = self.build_triangle_shape(side_length, triangle_height)
+
+        self.svg.width = side_length * 3
+        self.svg.height = side_length * 6
+
+        i = 0
+        for y in range(5):
+            for x in range(5):
+                val = int(self.hash[i:][:1], 16)
+                opacity = promap(val, 0, 15, 0.02, 0.15)
+                fill = '#ddd' if val % 2 == 0 else '#222'
+
+                rotation = ''
+                if y % 2 == 0:
+                    rotation = 180 if x % 2 == 0 else 0
+                else:
+                    rotation = 180 if x % 2 != 0 else 0
+
+                tmp_tri = str(triangle)
+                self.svg.polyline(tmp_tri, {
+                    'opacity': opacity,
+                    'fill': fill,
+                    'stroke': '#444',
+                    'transform': 'translate({}, {}) rotate({}, {}, {})'.format(
+                        (x * side_length * 0.5 - side_length / 2), (triangle_height * y),
+                        rotation, (side_length / 2), (triangle_height / 2)
+                    )
+                })
+
+                # Add an extra one at top-right, for tiling.
+                if x == 0:
+                    tmp_tri = str(triangle)
+                    self.svg.polyline(tmp_tri, {
+                        'opacity': opacity,
+                        'fill': fill,
+                        'stroke': '#444',
+                        'transform': 'translate({}, {}) rotate({}, {}, {})'.format(
+                            (6 * side_length * 0.5 - side_length / 2), (triangle_height * y),
+                            rotation, (side_length / 2), (triangle_height / 2)
+                        )
+                    })
+
+                i += 1
+
     def build_hexagon_shape(self, side_length):
         c = side_length
         a = c / 2
@@ -432,3 +481,9 @@ class GeoPattern(object):
             'self.rect({}, 0, {}, {})'.format(square_size, square_size, square_size * 3),
             'self.rect(0, {}, {}, {})'.format(square_size, square_size * 3, square_size)
         ]
+
+    def build_triangle_shape(self, side_length, height):
+        half_width = side_length / 2
+        return '{}, 0, {}, {}, 0, {}, {}, 0'.format(
+            half_width, side_length, height, height, half_width
+        )
