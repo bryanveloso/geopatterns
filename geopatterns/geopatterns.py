@@ -19,6 +19,7 @@ class GeoPattern(object):
         available_generators = [
             'hexagons',
             'overlapping_circles',
+            'overlapping_rings',
             'plus_signs',
             'rings',
             'sinewaves',
@@ -176,6 +177,69 @@ class GeoPattern(object):
                             'opacity': opacity
                         }
                     })
+
+                i += 1
+
+    def geo_overlapping_rings(self):
+        scale = int(self.hash[1:][:1], 16)
+
+        ring_size = promap(scale, 0, 15, 5, 80)
+        stroke_width = ring_size / 4
+
+        self.svg.width = (ring_size + stroke_width) * 6
+        self.svg.height = (ring_size + stroke_width) * 6
+
+        i = 0
+        for y in range(6):
+            for x in range(6):
+                val = int(self.hash[i:][:1], 16)
+                opacity = promap(val, 0, 15, 0.02, 0.16)
+
+                self.svg.circle(x * ring_size, y * ring_size, ring_size, **{
+                        'fill': 'none',
+                        'stroke': '#000',
+                        'style': {
+                            'opacity': opacity,
+                            'stroke-width': '{}px'.format(stroke_width)
+                        }
+                    }
+                )
+
+                # Add an extra one at top-right, for tiling.
+                if x == 0:
+                    self.svg.circle(6 * ring_size, y * ring_size, ring_size, **{
+                            'fill': 'none',
+                            'stroke': '#000',
+                            'style': {
+                                'opacity': opacity,
+                                'stroke-width': '{}px'.format(stroke_width)
+                            }
+                        }
+                    )
+
+                # Add an extra row at the end that matches the first row, for tiling.
+                if y == 0:
+                    self.svg.circle(x * ring_size, 6 * ring_size, ring_size, **{
+                            'fill': 'none',
+                            'stroke': '#000',
+                            'style': {
+                                'opacity': opacity,
+                                'stroke-width': '{}px'.format(stroke_width)
+                            }
+                        }
+                    )
+
+                # Add an extra one at bottom-right, for tiling.
+                if x == 0 and y == 0:
+                    self.svg.circle(6 * ring_size, 6 * ring_size, ring_size, **{
+                            'fill': 'none',
+                            'stroke': '#000',
+                            'style': {
+                                'opacity': opacity,
+                                'stroke-width': '{}px'.format(stroke_width)
+                            }
+                        }
+                    )
 
                 i += 1
 
