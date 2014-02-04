@@ -33,9 +33,13 @@ Currently available generators are:
 
 * `hexagons`
 * `overlapping_circles`
+* `overlapping_rings`
+* `plaid`
+* `plus_signs`
 * `rings`
 * `sinewaves`
 * `squares`
+* `triangles`
 * `xes`
 
 Get the SVG string:
