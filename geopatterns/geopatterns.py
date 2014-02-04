@@ -20,6 +20,7 @@ class GeoPattern(object):
             'hexagons',
             'overlapping_circles',
             'overlapping_rings',
+            'plaid',
             'plus_signs',
             'rings',
             'sinewaves',
@@ -242,6 +243,51 @@ class GeoPattern(object):
                     )
 
                 i += 1
+
+    def geo_plaid(self):
+        height = 0
+        width = 0
+
+        # Horizontal stripes.
+        i = 0
+        for y in range(18):
+            space = int(self.hash[i:][:1], 16)
+            height += space + 5
+
+            val = int(self.hash[i:][:1], 16)
+            opacity = promap(val, 0, 15, 0.02, 0.15)
+            fill = '#ddd' if val % 2 == 0 else '#222'
+            stripe_height = val + 5
+
+            self.svg.rect(0, height, '100%', stripe_height, **{
+                'opacity': opacity,
+                'fill': fill
+            })
+
+            height += stripe_height
+            i += 2
+
+        # Vertical stripes.
+        i = 0
+        for x in range(18):
+            space = int(self.hash[i:][:1], 16)
+            width += space + 5
+
+            val = int(self.hash[i:][:1], 16)
+            opacity = promap(val, 0, 15, 0.02, 0.15)
+            fill = '#ddd' if val % 2 == 0 else '#222'
+            stripe_width = val + 5
+
+            self.svg.rect(0, width, '100%', stripe_width, **{
+                'opacity': opacity,
+                'fill': fill
+            })
+
+            width += stripe_width
+            i += 2
+
+        self.svg.width = width
+        self.svg.height = height
 
     def geo_plus_signs(self):
         square_size = promap(int(self.hash[0:][:1], 16), 0, 15, 10, 25)
