@@ -151,7 +151,7 @@ class GeoPattern(object):
             self.svg.path(str, **{
                 'fill': 'none',
                 'stroke': fill,
-                'transform': 'translate({}, {})'.format(
+                'transform': 'translate(-{}, {})'.format(
                     (period / 4), (wave_width * i - amplitude * 1.5)
                 ),
                 'style': {
@@ -163,7 +163,7 @@ class GeoPattern(object):
             self.svg.path(str, **{
                 'fill': 'none',
                 'stroke': fill,
-                'transform': 'translate({}, {})'.format(
+                'transform': 'translate(-{}, {})'.format(
                     (period / 4), (wave_width * i - amplitude * 1.5 + wave_width * 36)
                 ),
                 'style': {
