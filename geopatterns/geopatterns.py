@@ -128,132 +128,6 @@ class GeoPattern(object):
 
                 i += 1
 
-    def geo_sinewaves(self):
-        period = math.floor(promap(int(self.hash[1:][:1], 16), 0, 15, 100, 400))
-        amplitude = math.floor(promap(int(self.hash[2:][:1], 16), 0, 15, 30, 100))
-        wave_width = math.floor(promap(int(self.hash[3:][:1], 16), 0, 15, 3, 30))
-
-        self.svg.width = period
-        self.svg.height = wave_width * 36
-
-        for i in range(35):
-            val = int(self.hash[i:][1], 16)
-            fill = '#ddd' if val % 2 == 0 else '#222'
-            opacity = promap(val, 0, 15, 0.02, 0.15)
-            x_offset = period / 4 * 0.7
-
-            str = 'M0 {} C {} 0, {} 0, {} {} S {} {}, {} {} S {} 0, {}, {}'.format(
-                amplitude, x_offset, (period / 2 - x_offset), (period / 2),
-                amplitude, (period - x_offset), (amplitude * 2), period,
-                amplitude, (period * 1.5 - x_offset), (period * 1.5), amplitude
-            )
-
-            self.svg.path(str, **{
-                'fill': 'none',
-                'stroke': fill,
-                'transform': 'translate(-{}, {})'.format(
-                    (period / 4), (wave_width * i - amplitude * 1.5)
-                ),
-                'style': {
-                    'opacity': opacity,
-                    'stroke_width': '{}px'.format(wave_width)
-                }
-            })
-
-            self.svg.path(str, **{
-                'fill': 'none',
-                'stroke': fill,
-                'transform': 'translate(-{}, {})'.format(
-                    (period / 4), (wave_width * i - amplitude * 1.5 + wave_width * 36)
-                ),
-                'style': {
-                    'opacity': opacity,
-                    'stroke_width': '{}px'.format(wave_width)
-                }
-            })
-
-    def geo_xes(self):
-        square_size = promap(int(self.hash[0:][:1], 16), 0, 15, 10, 25)
-        x_shape = self.build_plus_shape(square_size)
-        x_size = square_size * 3 * 0.943
-
-        self.svg.width = x_size * 3
-        self.svg.height = x_size * 3
-
-        i = 0
-        for y in range(5):
-            for x in range(5):
-                val = int(self.hash[i:][:1], 16)
-                opacity = promap(val, 0, 15, 0.02, 0.15)
-                dy = (y * x_size - x_size * 0.5) if x % 2 == 0 else (y * x_size - x_size * 0.5 + x_size / 4)
-                fill = '#ddd' if val % 2 == 0 else '#222'
-
-                self.svg.group(x_shape, **{
-                    'fill': fill,
-                    'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
-                        (x * x_size / 2 - x_size / 2), (dy - y * x_size / 2),
-                        (x_size / 2), (x_size / 2)
-                    ),
-                    'style': {
-                        'opacity': opacity
-                    }
-                })
-
-                # Add an extra column on the right for tiling.
-                if x == 0:
-                    self.svg.group(x_shape, **{
-                        'fill': fill,
-                        'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
-                            (6 * x_size / 2 - x_size / 2), (dy - y * x_size / 2),
-                            (x_size / 2), (x_size / 2)
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
-
-                # Add an extra row on the bottom that matches the first row, for tiling.
-                if y == 0:
-                    dy = (6 * x_size - x_size / 2) if x % 2 == 0 else (6 * x_size - x_size / 2 + x_size / 4)
-                    self.svg.group(x_shape, **{
-                        'fill': fill,
-                        'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
-                            (x * x_size / 2 - x_size / 2), (dy - 6 * x_size / 2),
-                            (x_size / 2), (x_size / 2)
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
-
-                # These can hang off the bottom, so put a row at the top for tiling.
-                if y == 5:
-                    self.svg.group(x_shape, **{
-                        'fill': fill,
-                        'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
-                            (x * x_size / 2 - x_size / 2), (dy - 11 * x_size / 2),
-                            (x_size / 2), (x_size / 2)
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
-
-                # Add an extra one at top-right and bottom-right, for tiling.
-                if x == 0 and y == 0:
-                    self.svg.group(x_shape, **{
-                        'fill': fill,
-                        'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
-                            (6 * x_size / 2 - x_size / 2), (dy - 6 * x_size / 2),
-                            (x_size / 2), (x_size / 2)
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
-
-                i += 1
-
     def geo_overlapping_circles(self):
         scale = int(self.hash[1:][:1], 16)
         diameter = promap(scale, 0, 15, 20, 200)
@@ -369,28 +243,6 @@ class GeoPattern(object):
 
                 i += 1
 
-    def geo_squares(self):
-        square_size = promap(int(self.hash[0:][:1], 16), 0, 15, 10, 70)
-
-        self.svg.width = square_size * 6
-        self.svg.height = square_size * 6
-
-        i = 0
-        for y in range(5):
-            for x in range(5):
-                val = int(self.hash[i:][:1], 16)
-                opacity = promap(val, 0, 15, 0.02, 0.2)
-                fill = '#ddd' if val % 2 == 0 else '#222'
-
-                self.svg.rect(x * square_size, y * square_size, square_size, square_size, **{
-                    'fill': fill,
-                    'style': {
-                        'opacity': opacity
-                    }
-                })
-
-                i += 1
-
     def geo_rings(self):
         scale = int(self.hash[1:][:1], 16)
         ring_size = promap(scale, 0, 15, 5, 80)
@@ -417,6 +269,72 @@ class GeoPattern(object):
                         }
                     }
                 )
+
+                i += 1
+
+    def geo_sinewaves(self):
+        period = math.floor(promap(int(self.hash[1:][:1], 16), 0, 15, 100, 400))
+        amplitude = math.floor(promap(int(self.hash[2:][:1], 16), 0, 15, 30, 100))
+        wave_width = math.floor(promap(int(self.hash[3:][:1], 16), 0, 15, 3, 30))
+
+        self.svg.width = period
+        self.svg.height = wave_width * 36
+
+        for i in range(35):
+            val = int(self.hash[i:][1], 16)
+            fill = '#ddd' if val % 2 == 0 else '#222'
+            opacity = promap(val, 0, 15, 0.02, 0.15)
+            x_offset = period / 4 * 0.7
+
+            str = 'M0 {} C {} 0, {} 0, {} {} S {} {}, {} {} S {} 0, {}, {}'.format(
+                amplitude, x_offset, (period / 2 - x_offset), (period / 2),
+                amplitude, (period - x_offset), (amplitude * 2), period,
+                amplitude, (period * 1.5 - x_offset), (period * 1.5), amplitude
+            )
+
+            self.svg.path(str, **{
+                'fill': 'none',
+                'stroke': fill,
+                'transform': 'translate(-{}, {})'.format(
+                    (period / 4), (wave_width * i - amplitude * 1.5)
+                ),
+                'style': {
+                    'opacity': opacity,
+                    'stroke_width': '{}px'.format(wave_width)
+                }
+            })
+
+            self.svg.path(str, **{
+                'fill': 'none',
+                'stroke': fill,
+                'transform': 'translate(-{}, {})'.format(
+                    (period / 4), (wave_width * i - amplitude * 1.5 + wave_width * 36)
+                ),
+                'style': {
+                    'opacity': opacity,
+                    'stroke_width': '{}px'.format(wave_width)
+                }
+            })
+
+    def geo_squares(self):
+        square_size = promap(int(self.hash[0:][:1], 16), 0, 15, 10, 70)
+
+        self.svg.width = square_size * 6
+        self.svg.height = square_size * 6
+
+        i = 0
+        for y in range(5):
+            for x in range(5):
+                val = int(self.hash[i:][:1], 16)
+                opacity = promap(val, 0, 15, 0.02, 0.2)
+                fill = '#ddd' if val % 2 == 0 else '#222'
+
+                self.svg.rect(x * square_size, y * square_size, square_size, square_size, **{
+                    'fill': fill,
+                    'style': {
+                        'opacity': opacity
+                    }
+                })
 
                 i += 1
 
@@ -464,6 +382,88 @@ class GeoPattern(object):
                             (6 * side_length * 0.5 - side_length / 2), (triangle_height * y),
                             rotation, (side_length / 2), (triangle_height / 2)
                         )
+                    })
+
+                i += 1
+
+    def geo_xes(self):
+        square_size = promap(int(self.hash[0:][:1], 16), 0, 15, 10, 25)
+        x_shape = self.build_plus_shape(square_size)
+        x_size = square_size * 3 * 0.943
+
+        self.svg.width = x_size * 3
+        self.svg.height = x_size * 3
+
+        i = 0
+        for y in range(5):
+            for x in range(5):
+                val = int(self.hash[i:][:1], 16)
+                opacity = promap(val, 0, 15, 0.02, 0.15)
+                dy = (y * x_size - x_size * 0.5) if x % 2 == 0 else (y * x_size - x_size * 0.5 + x_size / 4)
+                fill = '#ddd' if val % 2 == 0 else '#222'
+
+                self.svg.group(x_shape, **{
+                    'fill': fill,
+                    'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
+                        (x * x_size / 2 - x_size / 2), (dy - y * x_size / 2),
+                        (x_size / 2), (x_size / 2)
+                    ),
+                    'style': {
+                        'opacity': opacity
+                    }
+                })
+
+                # Add an extra column on the right for tiling.
+                if x == 0:
+                    self.svg.group(x_shape, **{
+                        'fill': fill,
+                        'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
+                            (6 * x_size / 2 - x_size / 2), (dy - y * x_size / 2),
+                            (x_size / 2), (x_size / 2)
+                        ),
+                        'style': {
+                            'opacity': opacity
+                        }
+                    })
+
+                # Add an extra row on the bottom that matches the first row, for tiling.
+                if y == 0:
+                    dy = (6 * x_size - x_size / 2) if x % 2 == 0 else (6 * x_size - x_size / 2 + x_size / 4)
+                    self.svg.group(x_shape, **{
+                        'fill': fill,
+                        'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
+                            (x * x_size / 2 - x_size / 2), (dy - 6 * x_size / 2),
+                            (x_size / 2), (x_size / 2)
+                        ),
+                        'style': {
+                            'opacity': opacity
+                        }
+                    })
+
+                # These can hang off the bottom, so put a row at the top for tiling.
+                if y == 5:
+                    self.svg.group(x_shape, **{
+                        'fill': fill,
+                        'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
+                            (x * x_size / 2 - x_size / 2), (dy - 11 * x_size / 2),
+                            (x_size / 2), (x_size / 2)
+                        ),
+                        'style': {
+                            'opacity': opacity
+                        }
+                    })
+
+                # Add an extra one at top-right and bottom-right, for tiling.
+                if x == 0 and y == 0:
+                    self.svg.group(x_shape, **{
+                        'fill': fill,
+                        'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
+                            (6 * x_size / 2 - x_size / 2), (dy - 6 * x_size / 2),
+                            (x_size / 2), (x_size / 2)
+                        ),
+                        'style': {
+                            'opacity': opacity
+                        }
                     })
 
                 i += 1
