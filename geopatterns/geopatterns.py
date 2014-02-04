@@ -18,7 +18,7 @@ class GeoPattern(object):
 
         available_generators = [
             'hexagons',
-            'overlappingcircles',
+            'overlapping_circles',
             'rings',
             'sinewaves',
             'squares',
@@ -252,7 +252,7 @@ class GeoPattern(object):
 
                 i += 1
 
-    def geo_overlappingcircles(self):
+    def geo_overlapping_circles(self):
         scale = int(self.hash[1:][:1], 16)
         diameter = promap(scale, 0, 15, 20, 200)
         radius = diameter / 2

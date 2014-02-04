@@ -32,7 +32,7 @@ generator (the result of this string/generator pair is the above image).
 Currently available generators are:
 
 * `hexagons`
-* `overlappingcircles`
+* `overlapping_circles`
 * `rings`
 * `sinewaves`
 * `squares`
