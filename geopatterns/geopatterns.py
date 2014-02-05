@@ -17,6 +17,7 @@ class GeoPattern(object):
         self.svg = SVG()
 
         available_generators = [
+            'bricks',
             'hexagons',
             'overlapping_circles',
             'overlapping_rings',
@@ -61,6 +62,54 @@ class GeoPattern(object):
         return self.svg.rect(0, 0, '100%', '100%', **{
             'fill': 'rgb({}, {}, {})'.format(r, g, b)
         })
+
+    def geo_bricks(self):
+        square_size = promap(int(self.hash[1:][:1], 16), 0, 15, 6, 60)
+        brick_width = square_size * 2
+        gap_size = square_size * 0.1
+
+        self.svg.width = (brick_width + gap_size) * 6
+        self.svg.height = (square_size + gap_size) * 6
+
+        i = 0
+        for y in range(6):
+            for x in range(6):
+                val = int(self.hash[i:][:1], 16)
+                opacity = promap(val, 0, 15, 0.02, 0.2)
+                fill = '#ddd' if val % 2 == 0 else '#222'
+
+                dx = -square_size if y % 2 == 0 else 0
+
+                self.svg.rect(x * (brick_width + gap_size) + dx,
+                    y * (square_size + gap_size), brick_width, square_size, **{
+                    'fill': fill,
+                    'stroke': '#000000',
+                    'style': {
+                        'opacity': opacity
+                    }
+                })
+
+                if x == 0:
+                    self.svg.rect(6 * (brick_width + gap_size) + dx,
+                        y * (square_size + gap_size), brick_width, square_size, **{
+                        'fill': fill,
+                        'stroke': '#000000',
+                        'style': {
+                            'opacity': opacity
+                        }
+                    })
+
+                if x == 0 and y == 0:
+                    self.svg.rect(6 * (brick_width + gap_size) + dx,
+                        6 * (square_size + gap_size), brick_width, square_size, **{
+                        'fill': fill,
+                        'stroke': '#000000',
+                        'style': {
+                            'opacity': opacity
+                        }
+                    })
+
+                i += 1
 
     def geo_hexagons(self):
         scale = int(self.hash[1:][:1], 16)
