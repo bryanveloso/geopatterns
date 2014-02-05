@@ -22,7 +22,7 @@ class SVG(object):
     def width(self):
         return self._width
 
-    @width.getter
+    @width.setter
     def width(self, value):
         self._width = math.floor(value)
 
