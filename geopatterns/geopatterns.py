@@ -183,12 +183,11 @@ class GeoPattern(object):
 
     def geo_overlapping_rings(self):
         scale = int(self.hash[1:][:1], 16)
-
         ring_size = promap(scale, 0, 15, 5, 80)
         stroke_width = ring_size / 4
 
-        self.svg.width = (ring_size + stroke_width) * 6
-        self.svg.height = (ring_size + stroke_width) * 6
+        self.svg.width = ring_size * 6
+        self.svg.height = ring_size * 6
 
         i = 0
         for y in range(6):
@@ -254,7 +253,7 @@ class GeoPattern(object):
             space = int(self.hash[i:][:1], 16)
             height += space + 5
 
-            val = int(self.hash[i:][:1], 16)
+            val = int(self.hash[i + 1:][:1], 16)
             opacity = promap(val, 0, 15, 0.02, 0.15)
             fill = '#ddd' if val % 2 == 0 else '#222'
             stripe_height = val + 5
@@ -273,12 +272,12 @@ class GeoPattern(object):
             space = int(self.hash[i:][:1], 16)
             width += space + 5
 
-            val = int(self.hash[i:][:1], 16)
+            val = int(self.hash[i + 1:][:1], 16)
             opacity = promap(val, 0, 15, 0.02, 0.15)
             fill = '#ddd' if val % 2 == 0 else '#222'
             stripe_width = val + 5
 
-            self.svg.rect(0, width, '100%', stripe_width, **{
+            self.svg.rect(width, 0, stripe_width, '100%', **{
                 'opacity': opacity,
                 'fill': fill
             })
@@ -305,7 +304,7 @@ class GeoPattern(object):
                 fill = '#ddd' if val % 2 == 0 else '#222'
                 dx = 0 if y % 2 == 0 else 1
 
-                self.svg.group(plus_shape, {
+                self.svg.group(plus_shape, **{
                     'fill': fill,
                     'transform': 'translate({}, {})'.format(
                         (x * plus_size - x * square_size + dx * square_size - square_size), (y * plus_size - y * square_size - plus_size / 2),
@@ -317,7 +316,7 @@ class GeoPattern(object):
 
                 # Add an extra column on the right for tiling.
                 if x == 0:
-                    self.svg.group(plus_shape, {
+                    self.svg.group(plus_shape, **{
                         'fill': fill,
                         'transform': 'translate({}, {})'.format(
                             (4 * plus_size - x * square_size + dx * square_size - square_size), (y * plus_size - y * square_size - plus_size / 2),
@@ -329,7 +328,7 @@ class GeoPattern(object):
 
                 # Add an extra row on the bottom that matches the first row, for tiling.
                 if y == 0:
-                    self.svg.group(plus_shape, {
+                    self.svg.group(plus_shape, **{
                         'fill': fill,
                         'transform': 'translate({}, {})'.format(
                             (x * plus_size - x * square_size + dx * square_size - square_size), (4 * plus_size - y * square_size - plus_size / 2),
@@ -341,7 +340,7 @@ class GeoPattern(object):
 
                 # Add an extra one at top-right and bottom-right, for tiling.
                 if x == 0 and y == 0:
-                    self.svg.group(plus_shape, {
+                    self.svg.group(plus_shape, **{
                         'fill': fill,
                         'transform': 'translate({}, {})'.format(
                             (4 * plus_size - x * square_size + dx * square_size - square_size), (4 * plus_size - y * square_size - plus_size / 2),
