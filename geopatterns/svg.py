@@ -1,12 +1,30 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import math
+
 
 class SVG(object):
     def __init__(self):
-        self.width = 100
-        self.height = 100
+        self._width = 100
+        self._height = 100
         self.svg_string = ''
+
+    @property
+    def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, value):
+        self._height = math.floor(value)
+
+    @property
+    def width(self):
+        return self._width
+
+    @width.getter
+    def width(self, value):
+        self._width = math.floor(value)
 
     @property
     def svg_header(self):
