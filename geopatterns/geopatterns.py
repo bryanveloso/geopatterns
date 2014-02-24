@@ -85,36 +85,24 @@ class GeoPattern(object):
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
 
-                dx = -square_size if y % 2 == 0 else 0
-
-                self.svg.rect(x * (brick_width + gap_size) + dx,
-                    y * (square_size + gap_size), brick_width, square_size, **{
+                styles = {
                     'fill': fill,
-                    'stroke': '#000000',
-                    'style': {
-                        'opacity': opacity
-                    }
-                })
+                    'fill-opacity': opacity,
+                    'stroke': self.STROKE_COLOR,
+                    'stroke-opacity': self.STROKE_OPACITY,
+                }
 
+                dx = -square_size if (y % 2 == 0) else 0
+
+                self.svg.rect(x * (brick_width + gap_size) + dx, y * (square_size + gap_size), brick_width, square_size, **styles)
+
+                # Add an extra one at top-right, for tiling.
                 if x == 0:
-                    self.svg.rect(6 * (brick_width + gap_size) + dx,
-                        y * (square_size + gap_size), brick_width, square_size, **{
-                        'fill': fill,
-                        'stroke': '#000000',
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                    self.svg.rect(6 * (brick_width + gap_size) + dx, y * (square_size + gap_size), brick_width, square_size, **styles)
 
+                # Add an extra one at bottom-right, for tiling.
                 if x == 0 and y == 0:
-                    self.svg.rect(6 * (brick_width + gap_size) + dx,
-                        6 * (square_size + gap_size), brick_width, square_size, **{
-                        'fill': fill,
-                        'stroke': '#000000',
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                    self.svg.rect(6 * (brick_width + gap_size) + dx, 6 * (square_size + gap_size), brick_width, square_size, **styles)
 
                 i += 1
 
@@ -132,57 +120,51 @@ class GeoPattern(object):
         for y in range(6):
             for x in range(6):
                 val = self.hex_val(i, 1)
-                dy = (y * hex_height) if x % 2 else (y * hex_height + hex_height / 2)
+                dy = (y * hex_height) if (x % 2 == 0) else (y * hex_height + hex_height / 2)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
-                tmp_hex = str(hex)
 
-                self.svg.polyline(hex, **{
-                    'opacity': opacity,
+                styles = {
                     'fill': fill,
-                    'stroke': '#000000',
+                    'fill-opacity': opacity,
+                    'stroke': STROKE_COLOR,
+                    'stroke-opacity': STROKE_OPACITY,
+                }
+
+                self.svg.polyline(hex, **styles.update({
                     'transform': 'translate({}, {})'.format(
                         x * side_length * 1.5 - hex_width / 2,
                         dy - hex_height / 2
-                    )
-                })
+                    )})
+                )
 
                 # Add an extra one at top-right, for tiling.
                 if x == 0:
-                    self.svg.polyline(hex, **{
-                        'opacity': opacity,
-                        'fill': fill,
-                        'stroke': '#000000',
+                    self.svg.polyline(hex, **styles.update({
                         'transform': 'translate({}, {})'.format(
                             6 * side_length * 1.5 - hex_width / 2,
                             dy - hex_height / 2
-                        )
-                    })
+                        )})
+                    )
 
                 # Add an extra row at the end that matches the first row, for tiling.
                 if y == 0:
                     dy = (6 * hex_height) if x % 2 == 0 else (6 * hex_height + hex_height / 2)
-                    self.svg.polyline(hex, **{
-                        'opacity': opacity,
-                        'fill': fill,
-                        'stroke': '#000000',
+                    self.svg.polyline(hex, **styles.update({
                         'transform': 'translate({}, {})'.format(
                             x * side_length * 1.5 - hex_width / 2,
                             dy - hex_height / 2
-                        )
-                    })
+                        )})
+                    )
 
                 # Add an extra one at bottom-right, for tiling.
                 if x == 0 and y == 0:
-                    self.svg.polyline(hex, **{
-                        'opacity': opacity,
-                        'fill': fill,
-                        'stroke': '#000000',
+                    self.svg.polyline(hex, **styles.update({
                         'transform': 'translate({}, {})'.format(
                             6 * side_length * 1.5 - hex_width / 2,
                             5 * hex_height + hex_height / 2
-                        )
-                    })
+                        )})
+                    )
 
                 i += 1
 
@@ -201,39 +183,26 @@ class GeoPattern(object):
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
 
-                self.svg.circle(x * radius, y * radius, radius, **{
+                styles = {
                     'fill': fill,
                     'style': {
-                        'opacity': opacity
+                        'opacity': opacity,
                     }
-                })
+                }
+
+                self.svg.circle(x * radius, y * radius, radius, **styles)
 
                 # Add an extra one at top-right, for tiling.
                 if x == 0:
-                    self.svg.circle(6 * radius, y * radius, radius, **{
-                        'fill': fill,
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                    self.svg.circle(6 * radius, y * radius, radius, **styles)
 
                 # Add an extra row at the end that matches the first row, for tiling.
                 if y == 0:
-                    self.svg.circle(x * radius, 6 * radius, radius, **{
-                        'fill': fill,
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                    self.svg.circle(x * radius, 6 * radius, radius, **styles)
 
                 # Add an extra one at bottom-right, for tiling.
                 if x == 0 and y == 0:
-                    self.svg.circle(6 * radius, 6 * radius, radius, **{
-                        'fill': fill,
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                    self.svg.circle(6 * radius, 6 * radius, radius, **styles)
 
                 i += 1
 
@@ -250,52 +219,30 @@ class GeoPattern(object):
             for x in range(6):
                 val = self.hex_val(i, 1)
                 opacity = self.opacity(val)
+                fill = self.fill_color(val)
 
-                self.svg.circle(x * ring_size, y * ring_size, ring_size, **{
-                        'fill': 'none',
-                        'stroke': '#000',
-                        'style': {
-                            'opacity': opacity,
-                            'stroke-width': '{}px'.format(stroke_width)
-                        }
+                styles = {
+                    'fill': 'none',
+                    'stroke': fill,
+                    'style': {
+                        'opacity': opacity,
+                        'stroke-width': '{}px'.format(stroke_width)
                     }
-                )
+                }
+
+                self.svg.circle(x * ring_size, y * ring_size, ring_size, **styles)
 
                 # Add an extra one at top-right, for tiling.
                 if x == 0:
-                    self.svg.circle(6 * ring_size, y * ring_size, ring_size, **{
-                            'fill': 'none',
-                            'stroke': '#000',
-                            'style': {
-                                'opacity': opacity,
-                                'stroke-width': '{}px'.format(stroke_width)
-                            }
-                        }
-                    )
+                    self.svg.circle(6 * ring_size, y * ring_size, ring_size, **styles)
 
                 # Add an extra row at the end that matches the first row, for tiling.
                 if y == 0:
-                    self.svg.circle(x * ring_size, 6 * ring_size, ring_size, **{
-                            'fill': 'none',
-                            'stroke': '#000',
-                            'style': {
-                                'opacity': opacity,
-                                'stroke-width': '{}px'.format(stroke_width)
-                            }
-                        }
-                    )
+                    self.svg.circle(x * ring_size, 6 * ring_size, ring_size, **styles)
 
                 # Add an extra one at bottom-right, for tiling.
                 if x == 0 and y == 0:
-                    self.svg.circle(6 * ring_size, 6 * ring_size, ring_size, **{
-                            'fill': 'none',
-                            'stroke': '#000',
-                            'style': {
-                                'opacity': opacity,
-                                'stroke-width': '{}px'.format(stroke_width)
-                            }
-                        }
-                    )
+                    self.svg.circle(6 * ring_size, 6 * ring_size, ring_size, **styles)
 
                 i += 1
 
@@ -358,53 +305,46 @@ class GeoPattern(object):
                 val = self.hex_val(i, 1)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
-                dx = 0 if y % 2 == 0 else 1
+                dx = 0 if (y % 2 == 0) else 1
 
-                self.svg.group(plus_shape, **{
+                styles = {
                     'fill': fill,
+                    'stroke': STROKE_COLOR,
+                    'stroke-opacity': STROKE_OPACITY,
+                    'style': {
+                        'fill-opacity': opacity,
+                    }
+                }
+
+                self.svg.group(plus_shape, **styles.update({
                     'transform': 'translate({}, {})'.format(
                         (x * plus_size - x * square_size + dx * square_size - square_size), (y * plus_size - y * square_size - plus_size / 2),
-                    ),
-                    'style': {
-                        'opacity': opacity
-                    }
-                })
+                    )})
+                )
 
                 # Add an extra column on the right for tiling.
                 if x == 0:
-                    self.svg.group(plus_shape, **{
-                        'fill': fill,
+                    self.svg.group(plus_shape, **styles.update({
                         'transform': 'translate({}, {})'.format(
                             (4 * plus_size - x * square_size + dx * square_size - square_size), (y * plus_size - y * square_size - plus_size / 2),
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                        )})
+                    )
 
                 # Add an extra row on the bottom that matches the first row, for tiling.
                 if y == 0:
-                    self.svg.group(plus_shape, **{
-                        'fill': fill,
+                    self.svg.group(plus_shape, **styles.update({
                         'transform': 'translate({}, {})'.format(
                             (x * plus_size - x * square_size + dx * square_size - square_size), (4 * plus_size - y * square_size - plus_size / 2),
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                        )})
+                    )
 
                 # Add an extra one at top-right and bottom-right, for tiling.
                 if x == 0 and y == 0:
-                    self.svg.group(plus_shape, **{
-                        'fill': fill,
+                    self.svg.group(plus_shape, **styles.update({
                         'transform': 'translate({}, {})'.format(
                             (4 * plus_size - x * square_size + dx * square_size - square_size), (4 * plus_size - y * square_size - plus_size / 2),
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                        )})
+                    )
 
                 i += 1
 
@@ -421,13 +361,14 @@ class GeoPattern(object):
             for x in range(6):
                 val = self.hex_val(i, 1)
                 opacity = self.opacity(val)
+                fill = self.fill_color(val)
 
                 self.svg.circle(
                     x * ring_size + x * stroke_width + (ring_size + stroke_width) / 2,
                     y * ring_size + y * stroke_width + (ring_size + stroke_width) / 2,
                     ring_size / 2, **{
                         'fill': 'none',
-                        'stroke': '#000',
+                        'stroke': fill,
                         'style': {
                             'opacity': opacity,
                             'stroke-width': '{}px'.format(stroke_width)
@@ -451,35 +392,33 @@ class GeoPattern(object):
             fill = self.fill_color(val)
             x_offset = period / 4 * 0.7
 
+            styles = {
+                'fill': 'none',
+                'stroke': fill,
+                'style': {
+                    'opacity': opacity,
+                    'stroke_width': '{}px'.format(wave_width),
+                }
+
+            }
+
             str = 'M0 {} C {} 0, {} 0, {} {} S {} {}, {} {} S {} 0, {}, {}'.format(
                 amplitude, x_offset, (period / 2 - x_offset), (period / 2),
                 amplitude, (period - x_offset), (amplitude * 2), period,
                 amplitude, (period * 1.5 - x_offset), (period * 1.5), amplitude
             )
 
-            self.svg.path(str, **{
-                'fill': 'none',
-                'stroke': fill,
+            self.svg.path(str, **styles.update({
                 'transform': 'translate(-{}, {})'.format(
                     (period / 4), (wave_width * i - amplitude * 1.5)
-                ),
-                'style': {
-                    'opacity': opacity,
-                    'stroke_width': '{}px'.format(wave_width)
-                }
-            })
+                )})
+            )
 
-            self.svg.path(str, **{
-                'fill': 'none',
-                'stroke': fill,
+            self.svg.path(str, **styles.update({
                 'transform': 'translate(-{}, {})'.format(
                     (period / 4), (wave_width * i - amplitude * 1.5 + wave_width * 36)
-                ),
-                'style': {
-                    'opacity': opacity,
-                    'stroke_width': '{}px'.format(wave_width)
-                }
-            })
+                )})
+            )
 
     def geo_squares(self):
         square_size = promap(self.hex_val(0, 1), 0, 15, 10, 70)
@@ -496,9 +435,9 @@ class GeoPattern(object):
 
                 self.svg.rect(x * square_size, y * square_size, square_size, square_size, **{
                     'fill': fill,
-                    'style': {
-                        'opacity': opacity
-                    }
+                    'fill-opacity': opacity,
+                    'stroke': self.STROKE_COLOR,
+                    'stroke-opacity': self.STROKE_OPACITY,
                 })
 
                 i += 1
@@ -519,6 +458,13 @@ class GeoPattern(object):
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
 
+                styles = {
+                    'fill': fill,
+                    'fill-opacity': opacity,
+                    'stroke': STROKE_COLOR,
+                    'stroke-opacity': STROKE_OPACITY,
+                }
+
                 rotation = ''
                 if y % 2 == 0:
                     rotation = 180 if x % 2 == 0 else 0
@@ -526,28 +472,22 @@ class GeoPattern(object):
                     rotation = 180 if x % 2 != 0 else 0
 
                 tmp_tri = str(triangle)
-                self.svg.polyline(tmp_tri, {
-                    'opacity': opacity,
-                    'fill': fill,
-                    'stroke': '#444',
+                self.svg.polyline(tmp_tri, styles.update({
                     'transform': 'translate({}, {}) rotate({}, {}, {})'.format(
                         (x * side_length * 0.5 - side_length / 2), (triangle_height * y),
                         rotation, (side_length / 2), (triangle_height / 2)
-                    )
-                })
+                    )})
+                )
 
                 # Add an extra one at top-right, for tiling.
                 if x == 0:
                     tmp_tri = str(triangle)
-                    self.svg.polyline(tmp_tri, {
-                        'opacity': opacity,
-                        'fill': fill,
-                        'stroke': '#444',
+                    self.svg.polyline(tmp_tri, styles.update({
                         'transform': 'translate({}, {}) rotate({}, {}, {})'.format(
                             (6 * side_length * 0.5 - side_length / 2), (triangle_height * y),
                             rotation, (side_length / 2), (triangle_height / 2)
-                        )
-                    })
+                        )})
+                    )
 
                 i += 1
 
@@ -565,71 +505,58 @@ class GeoPattern(object):
                 val = self.hex_val(i, 1)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
-                dy = (y * x_size - x_size * 0.5) if x % 2 == 0 else (y * x_size - x_size * 0.5 + x_size / 4)
+                dy = (y * x_size - x_size * 0.5) if (x % 2 == 0) else (y * x_size - x_size * 0.5 + x_size / 4)
 
-                self.svg.group(x_shape, **{
+                styles = {
                     'fill': fill,
+                    'style': {
+                        'opacity': opacity,
+                    }
+                }
+
+                self.svg.group(x_shape, **styles.merge({
                     'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
                         (x * x_size / 2 - x_size / 2), (dy - y * x_size / 2),
                         (x_size / 2), (x_size / 2)
-                    ),
-                    'style': {
-                        'opacity': opacity
-                    }
-                })
+                    )})
+                )
 
                 # Add an extra column on the right for tiling.
                 if x == 0:
-                    self.svg.group(x_shape, **{
-                        'fill': fill,
+                    self.svg.group(x_shape, **styles.merge({
                         'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
                             (6 * x_size / 2 - x_size / 2), (dy - y * x_size / 2),
                             (x_size / 2), (x_size / 2)
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                        )})
+                    )
 
                 # Add an extra row on the bottom that matches the first row, for tiling.
                 if y == 0:
                     dy = (6 * x_size - x_size / 2) if x % 2 == 0 else (6 * x_size - x_size / 2 + x_size / 4)
-                    self.svg.group(x_shape, **{
-                        'fill': fill,
+                    self.svg.group(x_shape, **styles.merge({
                         'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
                             (x * x_size / 2 - x_size / 2), (dy - 6 * x_size / 2),
                             (x_size / 2), (x_size / 2)
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                        )})
+                    )
 
                 # These can hang off the bottom, so put a row at the top for tiling.
                 if y == 5:
-                    self.svg.group(x_shape, **{
-                        'fill': fill,
+                    self.svg.group(x_shape, **styles.merge({
                         'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
                             (x * x_size / 2 - x_size / 2), (dy - 11 * x_size / 2),
                             (x_size / 2), (x_size / 2)
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                        )})
+                    )
 
                 # Add an extra one at top-right and bottom-right, for tiling.
                 if x == 0 and y == 0:
-                    self.svg.group(x_shape, **{
-                        'fill': fill,
+                    self.svg.group(x_shape, **styles.merge({
                         'transform': 'translate({}, {}) rotate(45, {}, {})'.format(
                             (6 * x_size / 2 - x_size / 2), (dy - 6 * x_size / 2),
                             (x_size / 2), (x_size / 2)
-                        ),
-                        'style': {
-                            'opacity': opacity
-                        }
-                    })
+                        )})
+                    )
 
                 i += 1
 
@@ -653,7 +580,7 @@ class GeoPattern(object):
             half_width, side_length, height, height, half_width
         )
 
-    def self.hex_val(index, length):
+    def hex_val(index, length):
         return int(self.hash[index:][:length], 16)
 
     def fill_color(self, val):
