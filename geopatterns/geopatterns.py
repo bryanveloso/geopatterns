@@ -580,7 +580,7 @@ class GeoPattern(object):
             half_width, side_length, height, height, half_width
         )
 
-    def hex_val(index, length):
+    def hex_val(self, index, length):
         return int(self.hash[index:][:length], 16)
 
     def fill_color(self, val):
