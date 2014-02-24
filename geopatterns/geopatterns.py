@@ -71,7 +71,7 @@ class GeoPattern(object):
         })
 
     def geo_bricks(self):
-        square_size = promap(int(self.hash[1:][:1], 16), 0, 15, 6, 60)
+        square_size = promap(hex_val(0, 1), 0, 15, 6, 60)
         brick_width = square_size * 2
         gap_size = square_size * 0.1
 
@@ -81,7 +81,7 @@ class GeoPattern(object):
         i = 0
         for y in range(6):
             for x in range(6):
-                val = int(self.hash[i:][:1], 16)
+                val = hex_val(i, 1)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
 
@@ -119,7 +119,7 @@ class GeoPattern(object):
                 i += 1
 
     def geo_hexagons(self):
-        scale = int(self.hash[1:][:1], 16)
+        scale = hex_val(0, 1)
         side_length = promap(scale, 0, 15, 5, 120)
         hex_height = side_length * math.sqrt(3)
         hex_width = side_length * 2
@@ -131,7 +131,7 @@ class GeoPattern(object):
         i = 0
         for y in range(6):
             for x in range(6):
-                val = int(self.hash[i:][:1], 16)
+                val = hex_val(i, 1)
                 dy = (y * hex_height) if x % 2 else (y * hex_height + hex_height / 2)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
@@ -187,7 +187,7 @@ class GeoPattern(object):
                 i += 1
 
     def geo_overlapping_circles(self):
-        scale = int(self.hash[1:][:1], 16)
+        scale = hex_val(0, 1)
         diameter = promap(scale, 0, 15, 20, 200)
         radius = diameter / 2
 
@@ -197,7 +197,7 @@ class GeoPattern(object):
         i = 0
         for y in range(6):
             for x in range(6):
-                val = int(self.hash[i:][:1], 16)
+                val = hex_val(i, 1)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
 
@@ -238,7 +238,7 @@ class GeoPattern(object):
                 i += 1
 
     def geo_overlapping_rings(self):
-        scale = int(self.hash[1:][:1], 16)
+        scale = hex_val(0, 1)
         ring_size = promap(scale, 0, 15, 5, 80)
         stroke_width = ring_size / 4
 
@@ -248,7 +248,7 @@ class GeoPattern(object):
         i = 0
         for y in range(6):
             for x in range(6):
-                val = int(self.hash[i:][:1], 16)
+                val = hex_val(i, 1)
                 opacity = self.opacity(val)
 
                 self.svg.circle(x * ring_size, y * ring_size, ring_size, **{
@@ -306,10 +306,10 @@ class GeoPattern(object):
         # Horizontal stripes.
         i = 0
         for y in range(18):
-            space = int(self.hash[i:][:1], 16)
+            space = hex_val(i, 1)
             height += space + 5
 
-            val = int(self.hash[i + 1:][:1], 16)
+            val = hex_val(i + 1, 1)
             opacity = self.opacity(val)
             fill = self.fill_color(val)
             stripe_height = val + 5
@@ -325,10 +325,10 @@ class GeoPattern(object):
         # Vertical stripes.
         i = 0
         for x in range(18):
-            space = int(self.hash[i:][:1], 16)
+            space = hex_val(i, 1)
             width += space + 5
 
-            val = int(self.hash[i + 1:][:1], 16)
+            val = hex_val(i + 1, 1)
             opacity = promap(val, 0, 15, 0.02, 0.15)
             fill = self.fill_color(val)
             stripe_width = val + 5
@@ -345,7 +345,7 @@ class GeoPattern(object):
         self.svg.height = height
 
     def geo_plus_signs(self):
-        square_size = promap(int(self.hash[0:][:1], 16), 0, 15, 10, 25)
+        square_size = promap(hex_val(0, 1), 0, 15, 10, 25)
         plus_size = square_size * 3
         plus_shape = self.build_plus_shape(square_size)
 
@@ -355,7 +355,7 @@ class GeoPattern(object):
         i = 0
         for y in range(6):
             for x in range(6):
-                val = int(self.hash[i:][:1], 16)
+                val = hex_val(i, 1)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
                 dx = 0 if y % 2 == 0 else 1
@@ -409,7 +409,7 @@ class GeoPattern(object):
                 i += 1
 
     def geo_rings(self):
-        scale = int(self.hash[1:][:1], 16)
+        scale = hex_val(0, 1)
         ring_size = promap(scale, 0, 15, 5, 80)
         stroke_width = ring_size / 4
 
@@ -419,7 +419,7 @@ class GeoPattern(object):
         i = 0
         for y in range(6):
             for x in range(6):
-                val = int(self.hash[i:][:1], 16)
+                val = hex_val(i, 1)
                 opacity = self.opacity(val)
 
                 self.svg.circle(
@@ -438,9 +438,9 @@ class GeoPattern(object):
                 i += 1
 
     def geo_sinewaves(self):
-        period = math.floor(promap(int(self.hash[1:][:1], 16), 0, 15, 100, 400))
-        amplitude = math.floor(promap(int(self.hash[2:][:1], 16), 0, 15, 30, 100))
-        wave_width = math.floor(promap(int(self.hash[3:][:1], 16), 0, 15, 3, 30))
+        period = math.floor(promap(hex_val(0, 1), 0, 15, 100, 400))
+        amplitude = math.floor(promap(hex_val(1, 1), 0, 15, 30, 100))
+        wave_width = math.floor(promap(hex_val(2, 1), 0, 15, 3, 30))
 
         self.svg.width = period
         self.svg.height = wave_width * 36
@@ -482,7 +482,7 @@ class GeoPattern(object):
             })
 
     def geo_squares(self):
-        square_size = promap(int(self.hash[0:][:1], 16), 0, 15, 10, 70)
+        square_size = promap(hex_val(0, 1), 0, 15, 10, 70)
 
         self.svg.width = square_size * 6
         self.svg.height = square_size * 6
@@ -490,7 +490,7 @@ class GeoPattern(object):
         i = 0
         for y in range(6):
             for x in range(6):
-                val = int(self.hash[i:][:1], 16)
+                val = hex_val(i, 1)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
 
@@ -504,7 +504,7 @@ class GeoPattern(object):
                 i += 1
 
     def geo_triangles(self):
-        scale = int(self.hash[1:][:1], 16)
+        scale = hex_val(0, 1)
         side_length = promap(scale, 0, 15, 5, 120)
         triangle_height = side_length / 2 * math.sqrt(3)
         triangle = self.build_triangle_shape(side_length, triangle_height)
@@ -515,7 +515,7 @@ class GeoPattern(object):
         i = 0
         for y in range(6):
             for x in range(6):
-                val = int(self.hash[i:][:1], 16)
+                val = hex_val(i, 1)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
 
@@ -552,7 +552,7 @@ class GeoPattern(object):
                 i += 1
 
     def geo_xes(self):
-        square_size = promap(int(self.hash[0:][:1], 16), 0, 15, 10, 25)
+        square_size = promap(hex_val(0, 1), 0, 15, 10, 25)
         x_shape = self.build_plus_shape(square_size)
         x_size = square_size * 3 * 0.943
 
@@ -562,7 +562,7 @@ class GeoPattern(object):
         i = 0
         for y in range(6):
             for x in range(6):
-                val = int(self.hash[i:][:1], 16)
+                val = hex_val(i, 1)
                 opacity = self.opacity(val)
                 fill = self.fill_color(val)
                 dy = (y * x_size - x_size * 0.5) if x % 2 == 0 else (y * x_size - x_size * 0.5 + x_size / 4)
@@ -652,6 +652,9 @@ class GeoPattern(object):
         return '{}, 0, {}, {}, 0, {}, {}, 0'.format(
             half_width, side_length, height, height, half_width
         )
+
+    def hex_val(index, length):
+        return int(self.hash[index:][:length], 16)
 
     def fill_color(self, val):
         return self.FILL_COLOR_LIGHT if (val % 2 == 0) else FILL_COLOR_DARK
