@@ -584,7 +584,7 @@ class GeoPattern(object):
         return int(self.hash[index:][:length], 16)
 
     def fill_color(self, val):
-        return self.FILL_COLOR_LIGHT if (val % 2 == 0) else FILL_COLOR_DARK
+        return self.FILL_COLOR_LIGHT if (val % 2 == 0) else self.FILL_COLOR_DARK
 
     def opacity(self, val):
         return promap(val, 0, 15, self.OPACITY_MIN, self.OPACITY_MAX)
