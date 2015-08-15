@@ -13,7 +13,7 @@ from .utils import promap
 
 class GeoPattern(object):
     def __init__(self, string, generator=None):
-        self.hash = hashlib.sha1(string).hexdigest()
+        self.hash = hashlib.sha1(string.encode('utf8')).hexdigest()
         self.svg = SVG()
 
         available_generators = [
