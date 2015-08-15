@@ -67,10 +67,10 @@ class SVG(object):
 
     def write_args(self, **kwargs):
         str = ''
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             if isinstance(value, dict):
                 str += '{}="'.format(key)
-                for key, value in value.iteritems():
+                for key, value in value.items():
                     str += '{}:{};'.format(key, value)
                 str += '" '
             else:
