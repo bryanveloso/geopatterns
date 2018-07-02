@@ -42,7 +42,7 @@ class GeoPattern(object):
 
     @property
     def base64_string(self):
-        return base64.encodestring(self.svg.to_string()).replace('\n', '')
+        return base64.encodestring(self.svg.to_string().encode()).replace(b'\n', b'')
 
     def generate_background(self):
         hue_offset = promap(int(self.hash[14:][:3], 16), 0, 4095, 0, 359)
@@ -519,7 +519,7 @@ class GeoPattern(object):
                     rotation = 180 if x % 2 != 0 else 0
 
                 tmp_tri = str(triangle)
-                self.svg.polyline(tmp_tri, {
+                self.svg.polyline(tmp_tri, **{
                     'opacity': opacity,
                     'fill': fill,
                     'stroke': '#444',
@@ -532,7 +532,7 @@ class GeoPattern(object):
                 # Add an extra one at top-right, for tiling.
                 if x == 0:
                     tmp_tri = str(triangle)
-                    self.svg.polyline(tmp_tri, {
+                    self.svg.polyline(tmp_tri, **{
                         'opacity': opacity,
                         'fill': fill,
                         'stroke': '#444',
