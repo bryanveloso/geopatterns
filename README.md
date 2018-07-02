@@ -63,3 +63,32 @@ body {
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz...zdmc+');
 }
 ```
+
+You can use `cairosvg` to save the SVG string as a PNG image. First, install `cairosvg`:
+
+```
+pip install cairosvg
+```
+
+And then run:
+
+```python
+>>> import cairosvg
+>>> from geopatterns import GeoPattern
+>>> pattern = GeoPattern('A string for your consideration.', generator='xes')
+>>> cairosvg.svg2png(bytestring=pattern.svg_string, write_to="output.png")
+```
+
+If you just want to visualize the pattern, you can use `cairosvg` with `PIL`:
+
+```python
+>>> import matplotlib.pyplot as plt
+>>> from PIL import Image
+>>> import cairosvg
+>>> from geopatterns import GeoPattern
+>>> pattern = GeoPattern('A string for your consideration.', generator='xes')
+>>> png = cairosvg.svg2png(bytestring=pattern.svg_string)
+>>> image = Image.open(BytesIO(png))
+>>> plt.imshow(image)
+>>> plt.show()
+```
