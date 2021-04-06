@@ -19,7 +19,6 @@ setup(
     author='Bryan Veloso',
     author_email='bryan@revyver.com',
     url='https://github.com/bryanveloso/geopatterns',
-    # py_modules=['geopatterns'],
     packages=setuptools.find_packages(
         exclude=[
             'tests',
