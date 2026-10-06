@@ -7,12 +7,12 @@ Generate beautiful SVG patterns from a string. This is a Python-port of
 [Jason Long][1]'s [Ruby library][2].
 
 [1]: https://github.com/jasonlong/
-[2]: https://github.com/jasonlong/geopatterns/
+[2]: https://github.com/jasonlong/geo_pattern/
 
 Installation
 ------------
 
-GeoPatterns is installable via `pip`:
+GeoPatterns requires Python 3.11 or newer and is installable via `pip`:
 
 ```shell
 $ pip install geopatterns
@@ -46,14 +46,14 @@ Get the SVG string:
 
 ```python
 >>> print(pattern.svg_string)
-u'<svg xmlns="http://www.w3.org/2000/svg" ...
+<svg xmlns="http://www.w3.org/2000/svg" ...
 ```
 
-Get the Base64-encoded string:
+Get the Base64-encoded string (as `bytes`):
 
 ```python
 >>> print(pattern.base64_string)
-'PHN2ZyB4bWxucz0iaHR0cDov...
+b'PHN2ZyB4bWxucz0iaHR0cDov...
 ```
 
 In the case of the Base64-encoded string, you can use it in CSS as follows:
@@ -82,6 +82,7 @@ And then run:
 If you just want to visualize the pattern, you can use `cairosvg` with `PIL`:
 
 ```python
+>>> from io import BytesIO
 >>> import matplotlib.pyplot as plt
 >>> from PIL import Image
 >>> import cairosvg

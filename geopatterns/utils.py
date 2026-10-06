@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
-
 # Python implementation of Processing's map function
 # http://processing.org/reference/map_.html
 def promap(value, v_min, v_max, d_min, d_max):  # v for value, d for desired

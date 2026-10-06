@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import math
 
 
-class SVG(object):
+class SVG:
     def __init__(self):
         self._width = 100
         self._height = 100
@@ -62,7 +59,7 @@ class SVG(object):
     def group(self, elements, **kwargs):
         self.svg_string += '<g {}>'.format(self.write_args(**kwargs))
         for element in elements:
-            exec(element)
+            self.rect(*element)
         self.svg_string += '</g>'
 
     def write_args(self, **kwargs):

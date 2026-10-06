@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import base64
 import hashlib
 import math
@@ -11,7 +8,7 @@ from .svg import SVG
 from .utils import promap
 
 
-class GeoPattern(object):
+class GeoPattern:
     def __init__(self, string, generator=None):
         self.hash = hashlib.sha1(string.encode('utf8')).hexdigest()
         self.svg = SVG()
@@ -42,7 +39,7 @@ class GeoPattern(object):
 
     @property
     def base64_string(self):
-        return base64.encodestring(self.svg.to_string().encode()).replace(b'\n', b'')
+        return base64.b64encode(self.svg.to_string().encode())
 
     def generate_background(self):
         hue_offset = promap(int(self.hash[14:][:3], 16), 0, 4095, 0, 359)
@@ -636,8 +633,8 @@ class GeoPattern(object):
 
     def build_plus_shape(self, square_size):
         return [
-            'self.rect({}, 0, {}, {})'.format(square_size, square_size, square_size * 3),
-            'self.rect(0, {}, {}, {})'.format(square_size, square_size * 3, square_size)
+            (square_size, 0, square_size, square_size * 3),
+            (0, square_size, square_size * 3, square_size)
         ]
 
     def build_triangle_shape(self, side_length, height):
