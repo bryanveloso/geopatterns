@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## 0.1.0 (10/06/2026)
 
 First release since 0.0.1. Gasp.
 
