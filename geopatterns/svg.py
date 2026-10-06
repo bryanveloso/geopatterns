@@ -1,75 +1,40 @@
 import math
+from contextlib import contextmanager
+
+
+def attributes(attrs):
+    parts = []
+    for name, value in attrs.items():
+        if isinstance(value, dict):
+            value = ''.join(f'{key.replace("_", "-")}:{val};' for key, val in value.items())
+        parts.append(f'{name.replace("_", "-")}="{value}" ')
+    return ''.join(parts)
 
 
 class SVG:
-    def __init__(self):
-        self._width = 100
-        self._height = 100
-        self.svg_string = ''
+    def __init__(self, width=100, height=100):
+        self.width = width
+        self.height = height
+        self.elements = []
 
-    @property
-    def height(self):
-        return self._height
+    def __str__(self):
+        header = f'<svg xmlns="http://www.w3.org/2000/svg" width="{math.floor(self.width)}" height="{math.floor(self.height)}">'
+        return header + ''.join(self.elements) + '</svg>'
 
-    @height.setter
-    def height(self, value):
-        self._height = math.floor(value)
+    def rect(self, x, y, width, height, **attrs):
+        self.elements.append(f'<rect x="{x}" y="{y}" width="{width}" height="{height}" {attributes(attrs)} />')
 
-    @property
-    def width(self):
-        return self._width
+    def circle(self, cx, cy, r, **attrs):
+        self.elements.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" {attributes(attrs)} />')
 
-    @width.setter
-    def width(self, value):
-        self._width = math.floor(value)
+    def path(self, d, **attrs):
+        self.elements.append(f'<path d="{d}" {attributes(attrs)} />')
 
-    @property
-    def svg_header(self):
-        return '<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">'.format(**{
-            'width': self.width, 'height': self.height
-        })
+    def polyline(self, points, **attrs):
+        self.elements.append(f'<polyline points="{points}" {attributes(attrs)} />')
 
-    @property
-    def svg_closer(self):
-        return '</svg>'
-
-    def to_string(self):
-        return ''.join([self.svg_header, self.svg_string, self.svg_closer])
-
-    def rect(self, x, y, width, height, **kwargs):
-        self.svg_string += '<rect x="{x}" y="{y}" width="{width}" height="{height}" {kwargs}/>'.format(**{
-            'x': x, 'y': y, 'width': width, 'height': height, 'kwargs': self.write_args(**kwargs)
-        })
-
-    def circle(self, cx, cy, r, **kwargs):
-        self.svg_string += '<circle cx="{cx}" cy="{cy}" r="{r}" {kwargs}/>'.format(**{
-            'cx': cx, 'cy': cy, 'r': r, 'kwargs': self.write_args(**kwargs)
-        })
-
-    def path(self, str, **kwargs):
-        self.svg_string += '<path d="{str}" {kwargs}/>'.format(**{
-            'str': str, 'kwargs': self.write_args(**kwargs)
-        })
-
-    def polyline(self, str, **kwargs):
-        self.svg_string += '<polyline points="{str}" {kwargs}/>'.format(**{
-            'str': str, 'kwargs': self.write_args(**kwargs)
-        })
-
-    def group(self, elements, **kwargs):
-        self.svg_string += '<g {}>'.format(self.write_args(**kwargs))
-        for element in elements:
-            self.rect(*element)
-        self.svg_string += '</g>'
-
-    def write_args(self, **kwargs):
-        str = ''
-        for key, value in kwargs.items():
-            if isinstance(value, dict):
-                str += '{}="'.format(key)
-                for key, value in value.items():
-                    str += '{}:{};'.format(key, value)
-                str += '" '
-            else:
-                str += '{}="{}" '.format(key, value)
-        return str
+    @contextmanager
+    def group(self, **attrs):
+        self.elements.append(f'<g {attributes(attrs)}>')
+        yield
+        self.elements.append('</g>')

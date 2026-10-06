@@ -1,3 +1,3 @@
-from .geopatterns import GeoPattern
+from .geopatterns import GeoPattern, InvalidPatternError
 
-__all__ = ['GeoPattern']
+__all__ = ['GeoPattern', 'InvalidPatternError']

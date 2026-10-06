@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from geopatterns import GeoPattern
+from geopatterns.patterns import PATTERNS as registered
 
 FIXTURES = Path(__file__).parent / 'fixtures'
 FIXTURE_STRING = 'Mastering Markdown'
@@ -28,30 +29,9 @@ PATTERNS = [
     'xes',
 ]
 
-# Patterns whose output matches upstream. Everything else is expected to fail.
-PORTED = set()
-
-
-def expected_to_pass(patterns):
-    # With no patterns requested, upstream picks one from the hash.
-    return set(patterns or PATTERNS) <= PORTED
-
-
-def mark_unported(patterns):
-    if expected_to_pass(patterns):
-        return []
-    return [pytest.mark.xfail(strict=True, reason='not ported yet')]
-
-
-def generate(string, patterns=None, color=None, base_color=None):
-    options = {}
-    if patterns:
-        options['patterns'] = patterns
-    if color:
-        options['color'] = color
-    if base_color:
-        options['base_color'] = base_color
-    return GeoPattern(string, **options)
+def test_patterns_are_in_upstream_order():
+    # With no pattern requested, the hash picks one by index.
+    assert list(registered) == PATTERNS
 
 
 FIXTURE_CASES = [
@@ -62,13 +42,10 @@ FIXTURE_CASES = [
 ]
 
 
-@pytest.mark.parametrize(
-    'name, patterns, options',
-    [pytest.param(*case, id=case[0], marks=mark_unported(case[1])) for case in FIXTURE_CASES],
-)
+@pytest.mark.parametrize('name, patterns, options', FIXTURE_CASES, ids=[case[0] for case in FIXTURE_CASES])
 def test_matches_upstream_fixture(name, patterns, options):
     expected = (FIXTURES / 'upstream' / f'{name}.svg').read_text().rstrip('\n')
-    assert generate(FIXTURE_STRING, patterns, **options).svg_string == expected
+    assert GeoPattern(FIXTURE_STRING, patterns=patterns, **options).svg_string == expected
 
 
 def case_id(args):
@@ -81,10 +58,7 @@ def case_id(args):
 HASHES = json.loads((FIXTURES / 'hashes.json').read_text())['cases']
 
 
-@pytest.mark.parametrize(
-    'case',
-    [pytest.param(case, id=case_id(case['args']), marks=mark_unported(case['args'].get('patterns'))) for case in HASHES],
-)
+@pytest.mark.parametrize('case', HASHES, ids=[case_id(case['args']) for case in HASHES])
 def test_matches_upstream_hashes(case):
-    svg = generate(**case['args']).svg_string
+    svg = GeoPattern(**case['args']).svg_string
     assert hashlib.sha256(svg.encode()).hexdigest() == case['sha256']
